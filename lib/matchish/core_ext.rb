@@ -16,11 +16,3 @@ class Hash
     Matchish::HashMatcher.new(self)
   end
 end
-
-class Class
-  def matchish(attrs = {})
-    attrs.empty? ?
-      Matchish::Matcher.new(self) :
-      Matchish::TypeMatcher.new(self, attrs)
-  end
-end

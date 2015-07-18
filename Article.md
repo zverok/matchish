@@ -232,40 +232,42 @@ Pragmatic" section.
 *Task*: treat any Ruby object as "algebraic" data type, which allows to
 check its deep inside structure.
 
-*Solution*: shown by RSpec (but I like to extend objects).
+*Solution*: basically, shown by RSpec. But I like to extend objects and
+do it in clear, predicatable way.
 
 ```ruby
 require 'matchish/matchers'
-include Matchish
 
-any === 1 # => true
+Object.matchish === 1 # => true
 Array.matchish === [] # => true
-Array.matchish.including(1) === [3,2,1] # => true
+Array.matchish.which(include?: 1) === [3,2,1] # => true
 
 # let's go deeper:
-[1,2,*any].matchish === [1,2,3,4] # => true
-String.matchish(length: 4) === 'test' # => true
-
-# you can leave without include:
-Matchish.any === 1
+[1,2,*Object.matchish].matchish === [1,2,3,4] # => true
+String.matchish.with(length: 4) === 'test' # => true
 
 # shorter version, yet without including entire module, is also available:
 require 'matchish/ma'
 
-Ma.any === 1
-Array.ma === [] # => true
+Array.ma.which(include?: 1) === [3,2,1] # => true
+Array.ma.which(include?: 1) === [4,5,6] # => false
+
+# Aaaaand even shorter, for fun:
+require 'matchish/m'
+
+String.m.with(length: 3) === 'wtf' # => true
+String.m.with(length: 3) === 'sorry' # => false
 ```
 
 Solution seems pretty straightforward for implementation, you can look
-at it in [matchish/matchers].
+at it in [matchish/matchers](https://github.com/zverok/matchish/blob/master/lib/matchish/matchers.rb).
 
 As it is rather proof-of-concept than library, not all of useful matchers
 are implemented.
 
 *Compromise*:
 * one (and only one) method `matchish` or `ma` monkey-patched in each object;
-* module with several "magic methods" (in fact, only `any` for now) you
-can include in global or local namespace.
+* (and it can be refinement, not patch, in modern Ruby).
 
 *Showcase*:
 
@@ -273,9 +275,9 @@ can include in global or local namespace.
 # classic functional list length, just for fun
 def length(list)
   case list
-  when [any].ma
+  when [Object.m].m
     1
-  when [any, *any].ma
+  when [Object.m, *Object.m].m
     1 + length(list[1..-1])
   end
 end
@@ -285,7 +287,7 @@ length([1,2,3]) # => 3
 # Something more interesting:
 %w[1980-12-28 1983-02-14 1992-03-30 1998-02-17].
   map(&Time.method(:parse)).
-  grep(Time.ma(month: 2))
+  grep(Time.m.with(month: 2))
 # => [1983-02-14 00:00:00 +0300, 1998-02-17 00:00:00 +0200]
 ```
 
@@ -299,12 +301,12 @@ variables.
 ```ruby
 require 'matchish/decompose/bind'
 
-[x = any, x, *any].ma === [1,1,2,3] # => true
+[x = Object.m, x, *Object.m].m === [1,1,2,3] # => true
 x.value # => 1
 
-[x = any, x, *any].ma === [1,2,3,4] # => false
+[x = Object.m, x, *Object.m].m === [1,2,3,4] # => false
 
-String.ma(length: (x = any)) === 'test' # => true
+String.m.with(length: (x = Object.m)) === 'test' # => true
 x.value # => 4
 ```
 
@@ -328,11 +330,11 @@ once, after which pattern is "bound").
 ```ruby
 require 'matchish/decompose/as'
 
-[any.as(:x), any.as(:x), *any.as(:y)].ma === [1,1,2,3] # => true
+[Object.m.as(:x), Object.m.as(:x), *Object.m.as(:y)].m === [1,1,2,3] # => true
 Matchish.last_match[:x] # => 1
 Matchish.last_match[:y] # => [2, 3]
 
-[any.as(:x), any.as(:x), *any].ma === [1,2,3,4] # => false
+[Object.m.as(:x), Object.m.as(:x), *Object.m].m === [1,2,3,4] # => false
 ```
 
 Looks like "more complex DSL", yet, at the same time, less magic. (By
@@ -349,9 +351,9 @@ its pros and cons. I honestly don't know which is "more Ruby-way".
 # For "match" solution: the same "list length" functional style
 def length(list)
   case list
-  when [any].ma
+  when [Object.m].m
     1
-  when [any, *any.as(:tail)].ma
+  when [Object.m, *Object.m.as(:tail)].m
     1 + length(Matchish.last_match[:tail])
   end
 end
@@ -360,7 +362,7 @@ length([1,2,3]) # => 3
 
 # For vars solution: some deep matching
 def check(hash)
-  if {(key = Symbol.ma) => Time.ma(month: (m = any))}.ma === hash
+  if {(key = Symbol.m) => Time.m.with(month: (m = Object.m))}.m === hash
     [key.value, m.value]
   end
 end
@@ -398,7 +400,7 @@ x = 10
 flag = true
 
 case x
-when Fixnum.ma.guard{|x| x > 5 && flag}
+when Fixnum.m.guard{|x| x > 5 && flag}
   p "here"
 when Fixnum # other case, without guard
   p "there"

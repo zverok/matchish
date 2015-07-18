@@ -15,9 +15,17 @@ module Matchish
       [SplatMatcher.new(self)]
     end
 
-    def including(*values)
-      IncludingMatcher.new(self, *values)
+    def which(options)
+      WhichMatcher.new(self, options)
     end
+
+    def with(options)
+      WithMatcher.new(self, options)
+    end
+
+    #def including(*values)
+      #IncludingMatcher.new(self, *values)
+    #end
 
     def dup
       self.class.new(@pattern)
@@ -121,28 +129,28 @@ module Matchish
     end
   end
 
-  class TypeMatcher < Matcher
-    def initialize(klass, attrs)
-      super(klass)
+  class WithMatcher < Matcher
+    def initialize(pattern, attrs)
+      super(pattern)
       @attrs = attrs
     end
 
     def match_internal?(object)
-      object.kind_of?(@pattern) &&
+      super(object) &&
         @attrs.all?{|a, v| match_pattern?(v, object.send(a))}
     end
   end
 
-  class << self
-    attr_reader :last_match
-
-    def any
-      AnyMatcher.new
+  class WhichMatcher < Matcher
+    def initialize(pattern, methods)
+      super(pattern)
+      @methods = methods
     end
-  end
 
-  def any
-    Matchish.any
+    def match_internal?(object)
+      super(object) &&
+        @methods.all?{|m, *args| object.send(m, *args)}
+    end
   end
 end
 

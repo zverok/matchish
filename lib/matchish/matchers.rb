@@ -99,33 +99,9 @@ module Matchish
     end
   end
 
-  class IncludingMatcher < Matcher
-    def initialize(base_pattern, *include_patterns)
-      super(base_pattern)
-      @include_patterns = include_patterns
-    end
-    
-    def match_internal?(object)
-      super(object) &&
-        @include_patterns.all?{|p|
-          object.detect{|o| match_pattern?(p, o)}
-        }
-    end
-  end
-
   class SplatMatcher < Matcher
     def match_internal?(object)
       object.all?{|o| match_pattern?(@pattern.dup, o)}
-    end
-  end
-
-  class AnyMatcher < Matcher
-    def initialize(*)
-      super(nil)
-    end
-    
-    def match_internal?(object)
-      true
     end
   end
 

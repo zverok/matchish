@@ -9,7 +9,7 @@ Please, read and comment there!
 Many years ago, when I considered myself a C++ expert (which was
 presumptous yet excusable for 19 yrs), I've liked to think something like
 "My language is the most powerful and expressive in entire world! I can
-implement literally *any* other language's feature with my templates and
+implement literally **any** other language's feature with my templates and
 operator redefinitions and ..."
 
 Now, being Ruby developer in my mid-30s, I became much more pragmatic,
@@ -68,7 +68,7 @@ You can also define `#===` for your class and have very complicated
 checks inside `case`.
 
 This is hell of close to pattern matching. I'm constantly finding myself
-using this feature exactly for *dispatching*. It is not as cool as method
+using this feature exactly for **dispatching**. It is not as cool as method
 overloading, yet concise enough:
 
 ```ruby
@@ -112,7 +112,7 @@ But it is only a part of "pattern matching" puzzle.
 
 ### Argument Decomposition in Expressions
 
-Ruby definitely *has* some of decomposing-values-by-pattern features:
+Ruby definitely **has** some of decomposing-values-by-pattern features:
 
 ```ruby
 a, b = [1,2,3] # a == 1, b == 2, the rest is lost
@@ -163,7 +163,7 @@ m['somename'] # 'te'
 
 You can think of them as a separate sub-language inside Ruby, which can
 be in no use outside the domain of string checking. Yet regexps can learn
-us a lesson of how *could* matching+decomposition look in Ruby.
+us a lesson of how **could** matching+decomposition look in Ruby.
 
 ### RSpec Matchers
 
@@ -207,7 +207,7 @@ matching in Ruby.
 For me, all of them (looking pretty similar) are missing the point. They
 are trying to invent some DSL, mimicing existing pattern-matching languages.
 Yet, IMO, pattern matching is not some "domain", it's rather basic language
-feature. So, the "*domain*-specific language" attempt to it is doomed by
+feature. So, the "**domain**-specific language" attempt to it is doomed by
 design.
 
 Let's try to invent solution, defined by next requirements:
@@ -229,10 +229,10 @@ Pragmatic" section.
 
 ### Types Being Algebraic
 
-*Task*: treat any Ruby object as "algebraic" data type, which allows to
+**Task**: treat any Ruby object as "algebraic" data type, which allows to
 check its deep inside structure.
 
-*Solution*: basically, shown by RSpec. But I like to extend objects and
+**Solution**: basically, shown by RSpec. But I like to extend objects and
 do it in clear, predicatable way.
 
 ```ruby
@@ -265,11 +265,11 @@ at it in [matchish/matchers](https://github.com/zverok/matchish/blob/master/lib/
 As it is rather proof-of-concept than library, not all of useful matchers
 are implemented.
 
-*Compromise*:
+**Compromise**:
 * one (and only one) method `matchish` or `ma` monkey-patched in each object;
 * (and it can be refinement, not patch, in modern Ruby).
 
-*Showcase*:
+**Showcase**:
 
 ```ruby
 # classic functional list length, just for fun
@@ -293,10 +293,10 @@ length([1,2,3]) # => 3
 
 ### Values Being Decomposed
 
-*Task*: alongside with matching pattern, store matched values in
+**Task**: alongside with matching pattern, store matched values in
 variables.
 
-*Solution 1*: strangely beautiful
+**Solution 1**: strangely beautiful
 
 ```ruby
 require 'matchish/decompose/bind'
@@ -318,14 +318,14 @@ After it, `x` has value of `Matchish::AnyPattern`. After very first comparison
 with real value, pattern is "bound" to this value, and all forecoming
 comparisons only return `true` if the value is exactly the same.
 
-*NB*: at the moment, I haven't invented elegant solution to name the
+**NB**: at the moment, I haven't invented elegant solution to name the
 splatted part of match (like `y = *any`).
 
 Downside of this approach is you can't save this kind of pattern in the
 constant (as it will not know the context of "x", and is usable only
 once, after which pattern is "bound").
 
-*Solution 2*: `Regexp`-like
+**Solution 2**: `Regexp`-like
 
 ```ruby
 require 'matchish/decompose/as'
@@ -342,10 +342,12 @@ Looks like "more complex DSL", yet, at the same time, less magic. (By
 explanation, as any expirienced Ruby programmer reads this as pretty
 obvious code.)
 
-*Compromise*: It seems both solutions are mere compromises, each having
-its pros and cons. I honestly don't know which is "more Ruby-way".
+**Compromise**: It seems both solutions are mere compromises, each having
+its pros and cons. I honestly don't know which is "more Ruby-way". The
+first one seems "smarter" while the last is definitely provides less
+magic and therefore more usability.
 
-*Showcase*:
+**Showcase**:
 
 ```ruby
 # For "match" solution: the same "list length" functional style
@@ -373,7 +375,7 @@ check(birthday: Time.new(2015, 2, 14))
 
 ### Imperative Inside Functional: Guards
 
-*Task*: Last but not least. Sometimes you are finding yourself writing
+**Task**: Last but not least. Sometimes you are finding yourself writing
 code like...
 
 ```ruby
@@ -391,7 +393,7 @@ end
 The whole idea around pattern-matching is - let's do the only match, no
 branching.
 
-*Solution*:
+**Solution**:
 
 ```ruby
 require 'matchish/guard'
@@ -423,20 +425,20 @@ Look, I've invented matchish and tried to use it when working on a parser
 project (unreleased yet) -- that's the domain where pattern matching should
 definitely be in use. And there was hard lesson learned:
 
-*All in all, powerful pattern matching need to be core language feature*.
+**All in all, powerful pattern matching need to be core language feature**.
 
 That's because of:
 
-* *natural look*: the more I've used "cool" matchish feature, the more was
+* **natural look**: the more I've used "cool" matchish feature, the more was
   fear of other developers being puzzled or disgusted with code... it
   became "extraterrastrial" a bit;
-* more important: *speed, optimization, overhead*; it became really easy
+* more important: **speed, optimization, overhead**; it became really easy
   to write "clever" algorithm implementation in some small method, then
   call it 1000 times and then profiler shows you tons of Matchish objects
   created, dispatching checks furiously while binding complex "matching
   context" and feasting with your memory and CPU time;
 * even more important: after all the considerations, it now seems for
-  me that *pattern matching IS a paradigm*; either you do all the execution
+  me that **pattern matching IS a paradigm**; either you do all the execution
   dispatching through the pattern matched function alternatives, or it
   will always be another (typically, more clear) way to express your
   intentions; the way your language (Ruby) is more naturally support.
@@ -469,7 +471,7 @@ As I wanted just to "show the point", I didn't want to write extensive
 specifications for weeks, then updating them, and only THEN writing
 an article.
 
-But as I wanted to *show* the point, I've need some tool to check at
+But as I wanted to **show** the point, I've need some tool to check at
 least all code I've written for article (before writing an implementation,
 BTW :) will work.
 

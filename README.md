@@ -19,27 +19,27 @@ include Ma
 
 case arg
 when String # your usual Ruby check
-when Fixnum.ma.guard{|x| x > 3} # Matchish!
-when [any.as(:x), *any].ma # Matchish!
+when Fixnum.m.guard{|x| x > 3} # Matchish!
+when [Object.m.as(:x), *Object.m].m # Matchish!
 
 end
 
 # Or, another example:
 
 %w[one two three].grep(/tw/) # your usual Ruby grep
-%w[one two three].grep(String.ma(length: 3)) # Matchish!
+%w[one two three].grep(String.m.with(length: 3)) # Matchish!
 ```
 
 * Complex patterns and Ruby types being algebraic
 
 ```ruby
 case arg
-when [{test: String.ma}.ma, any, *Hash.ma].ma
+when [{test: String.m}.m, Object.m, *Hash.m].m
   # catches ONLY array with:
   # * first item being a hash with exactly one key: :test, and value - kind of string,
   # * second item being any value
   # * then any number of items, each of them should be hashes
-when Time.ma(year: 2015)
+when Time.m.with(year: 2015)
   # catches ONLY time with year == 2015
 end
 ```
@@ -49,13 +49,13 @@ end
 ```ruby
 # local variable flavor
 case arg
-when [(x = Fixnum.ma), x, *any] # matches [1,1,3,4], but not [1,2,3,4]
+when [(x = Fixnum.m), x, *Object.m] # matches [1,1,3,4], but not [1,2,3,4]
   p x.value # => 1
 end
 
 # as/match flavor
 case arg
-when [Fixnum.ma.as(:x), any.as(:x), *any] # matches [1,1,3,4], but not [1,2,3,4]
+when [Fixnum.ma.as(:x), Object.m.as(:x), *Object.m] # matches [1,1,3,4], but not [1,2,3,4]
   p Matchish.last_match[:x] # => 1
 end
 ```
@@ -66,7 +66,7 @@ end
 flag = true
 
 case x
-when (1..3).ma.guard{flag} # only matches when flag is true
+when (1..3).m.guard{flag} # only matches when flag is true
 when (1..3) # matches otherwise
 end
 ```

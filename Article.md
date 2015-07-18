@@ -1,3 +1,7 @@
+**NB**: It's just a repository copy of [main article](http://zverok.github.io/blog/2015-07-18-matchish.html)
+
+Please, read and comment there!
+
 # Matchish: an Exercise in Implementing Pattern Matching in Ruby
 
 ## Short Preface

@@ -15,7 +15,6 @@ Nevertheless, features:
 ```ruby
 require 'matchish'
 require 'matchish/m' # shortening of all "matchish" to "m"
-include Ma
 
 case arg
 when String # your usual Ruby check

@@ -14,7 +14,7 @@ Nevertheless, features:
 
 ```ruby
 require 'matchish'
-require 'matchish/ma' # shortening of all "matchish" to "ma"
+require 'matchish/m' # shortening of all "matchish" to "m"
 include Ma
 
 case arg

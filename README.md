@@ -48,13 +48,13 @@ end
 ```ruby
 # local variable flavor
 case arg
-when [(x = Fixnum.m), x, *Object.m] # matches [1,1,3,4], but not [1,2,3,4]
+when [(x = Fixnum.m), x, *Object.m].m # matches [1,1,3,4], but not [1,2,3,4]
   p x.value # => 1
 end
 
 # as/match flavor
 case arg
-when [Fixnum.ma.as(:x), Object.m.as(:x), *Object.m] # matches [1,1,3,4], but not [1,2,3,4]
+when [Fixnum.ma.as(:x), Object.m.as(:x), *Object.m].m # matches [1,1,3,4], but not [1,2,3,4]
   p Matchish.last_match[:x] # => 1
 end
 ```
@@ -73,7 +73,7 @@ end
 ## Playing with code
 
 ```
-git clone git@github.com:zverok/dokaz.git
+git clone git@github.com:zverok/matchish.git
 bundle install
 bundle exec dokaz Article.md
 ```

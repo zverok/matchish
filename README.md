@@ -4,7 +4,7 @@
 is *not* a production-level code (and *not* released as a gem therefore),
 but just a proof-of-concept.
 
-You can look at corresponding [blog post](http://zverok.github.io/blog/***)
+You can look at corresponding [blog post](http://zverok.github.io/blog/2015-07-18-matchish.html)
 to see the rationale and overview, and also the rationale of why it is
 not a gem.
 

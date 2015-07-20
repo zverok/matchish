@@ -54,7 +54,7 @@ end
 
 # as/match flavor
 case arg
-when [Fixnum.ma.as(:x), Object.m.as(:x), *Object.m].m # matches [1,1,3,4], but not [1,2,3,4]
+when [Fixnum.m.as(:x), Object.m.as(:x), *Object.m].m # matches [1,1,3,4], but not [1,2,3,4]
   p Matchish.last_match[:x] # => 1
 end
 ```
